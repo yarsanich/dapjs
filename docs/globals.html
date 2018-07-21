@@ -116,6 +116,24 @@
 			<p>The web example can be seen running at:</p>
 			<p><a href="https://armmbed.github.io/dapjs/examples/daplink-flash/web.html">https://armmbed.github.io/dapjs/examples/daplink-flash/web.html</a></p>
 			<p>Refer to the <a href="https://armmbed.github.io/dapjs/">DAPjs API Documentation</a> for more information.</p>
+			<h2 id="supported-systems">Supported Systems</h2>
+			<h3 id="browsers">Browsers</h3>
+			<p>Please refer to the <a href="https://github.com/WICG/webusb#implementation-status">WebUSB implementation status</a> for browser support.</p>
+			<h3 id="windows">Windows</h3>
+			<p>All transports outlined below are known to work on Windows 7, 8 and 10. Please refer to the <a href="https://github.com/tessel/node-usb/issues/182">node-usb FAQ</a> with any issues using the <code>USB</code> or <code>WebUSB</code> transport in <code>Node.js</code>. The <code>HID</code> transport is preferred on Windows.</p>
+			<p>Please ensure you <strong>don&#39;t</strong> have the Mbed Serial driver installed on <code>Windows 10</code> as this can cause issues and isn&#39;t needed on this platform.</p>
+			<h3 id="macos">MacOS</h3>
+			<p>No known issues with any transports in <code>Node.js</code> Tested on MacOS 10.12.</p>
+			<h3 id="linux">Linux</h3>
+			<p>Basic testing undertaken with no known issues. Please refer to the <a href="https://github.com/tessel/node-usb/issues/182">node-usb FAQ</a> with any issues using the <code>USB</code> or <code>WebUSB</code> transport in <code>Node.js</code>.</p>
+			<h3 id="development-boards">Development Boards</h3>
+			<p>All develoment boards supporting <code>CMSIS-DAP</code> should work. For the flash and serial <code>DAPLink</code> functionality, all <a href="https://os.mbed.com/platforms/?mbed-enabled=15">Mbed Enabled boards</a> should work, but need the latest <code>DAPLink</code> firmware installed.</p>
+			<p>The latest DAPLink containing WebUSB support needs to be built from the <a href="https://github.com/ARMmbed/DAPLink">DAPLink source</a> until we have prepared a new firmware release on <a href="https://armmbed.github.io/DAPLink/">https://armmbed.github.io/DAPLink/</a>.</p>
+			<p>All examples have been tested with the latest DAPLink fiormware on the following hardware:</p>
+			<ul>
+				<li>Freedom K64F</li>
+				<li>BBC micro:bit</li>
+			</ul>
 			<h2 id="choosing-a-transport">Choosing a Transport</h2>
 			<p>In order to use DAPjs, you need to install support for one of the transports. Use the following information to help you choose which to use:</p>
 			<h3 id="webusb">WebUSB</h3>
