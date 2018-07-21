@@ -38,12 +38,25 @@ export declare class CmsisDAP extends EventEmitter implements Proxy {
      */
     protected selectProtocol(protocol: DAPProtocol): Promise<void>;
     /**
+     * Send a command
+     * @param command Command to send
+     * @param data Data to use
+     * @returns Promise of DataView
+     */
+    protected send(command: number, data?: BufferSource): Promise<DataView>;
+    /**
+     * Get DAP information
+     * @param request Type of information to get
+     * @returns Promise of DataView
+     */
+    dapInfo(request: DAPInfoRequest): Promise<number | string>;
+    /**
      * Send an SWJ Sequence
      * https://www.keil.com/pack/doc/CMSIS/DAP/html/group__DAP__SWJ__Sequence.html
      * @param sequence The sequence to send
      * @returns Promise
      */
-    protected swjSequence(sequence: BufferSource): Promise<void>;
+    swjSequence(sequence: BufferSource): Promise<void>;
     /**
      * Configure Transfer
      * https://www.keil.com/pack/doc/CMSIS/DAP/html/group__DAP__TransferConfigure.html
@@ -52,14 +65,7 @@ export declare class CmsisDAP extends EventEmitter implements Proxy {
      * @param matchRetry Number of retries on reads with Value Match in DAP_Transfer
      * @returns Promise
      */
-    protected configureTransfer(idleCycles: number, waitRetry: number, matchRetry: number): Promise<void>;
-    /**
-     * Send a command
-     * @param command Command to send
-     * @param data Data to use
-     * @returns Promise of DataView
-     */
-    protected send(command: number, data?: BufferSource): Promise<DataView>;
+    configureTransfer(idleCycles: number, waitRetry: number, matchRetry: number): Promise<void>;
     /**
      * Connect to target device
      * @returns Promise
@@ -80,12 +86,6 @@ export declare class CmsisDAP extends EventEmitter implements Proxy {
      * @returns Promise of whether a device specific reset sequence is implemented
      */
     reset(): Promise<boolean>;
-    /**
-     * Get DAP information
-     * @param request Type of information to get
-     * @returns Promise of DataView
-     */
-    dapInfo(request: DAPInfoRequest): Promise<number | string>;
     /**
      * Transfer data with a single read or write operation
      * @param port Port type (debug port or access port)

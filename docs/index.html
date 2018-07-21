@@ -219,20 +219,106 @@ daplink.connect()
 			<h4 id="cons">Cons</h4>
 			<ul>
 				<li>Requires a recent version of <a href="https://armmbed.github.io/DAPLink/">DAPLink</a> to be installed on your target device.</li>
+				<li>Can have issues on Windows machines</li>
 			</ul>
 			<h2 id="architecture">Architecture</h2>
 			<p>The architecture of this project is built up in layers as follows:</p>
 			<h3 id="transport">Transport</h3>
 			<p>The <code>Transport</code> layer offers access to the USB device plugged into the host. Different transports are available based on user needs (see above).</p>
+			<h4 id="implementation-status">Implementation Status</h4>
+			<ul>
+				<li>[x] packetSize</li>
+				<li>[x] open()</li>
+				<li>[x] close()</li>
+				<li>[x] read()</li>
+				<li>[x] write()</li>
+			</ul>
 			<h3 id="proxy">Proxy</h3>
 			<p>The <code>Proxy</code> layer uses the transport layer to expose low-level <code>CMSIS-DAP</code> commands to the next layer. A common use for the proxy is as a debug chip attached to the main processor accessed over USB.</p>
 			<p>A CMSIS-DAP implementation is included, however a network proxy or similar could be introduced at this layer in order to remote commands.</p>
+			<h4 id="implementation-status">Implementation Status</h4>
+			<ul>
+				<li>[x] operationCount</li>
+				<li>[x] blockSize</li>
+				<li>[x] dapInfo()</li>
+				<li>[x] swjSequence()</li>
+				<li>[x] swjClock()</li>
+				<li>[x] transferConfigure()</li>
+				<li>[x] connect()</li>
+				<li>[x] disconnect()</li>
+				<li>[x] reconnect()</li>
+				<li>[x] reset()</li>
+				<li>[x] transfer()</li>
+				<li>[x] transferBlock()</li>
+				<li>[ ] hostStatus()</li>
+				<li>[ ] delay()</li>
+				<li>[ ] writeAbort()</li>
+				<li>[ ] swjPins()</li>
+				<li>[ ] swdSequence()</li>
+				<li>[ ] swdConfigure()</li>
+				<li>[ ] swoTransport()</li>
+				<li>[ ] swoMode()</li>
+				<li>[ ] swoBaudrate()</li>
+				<li>[ ] swoControl()</li>
+				<li>[ ] swoStatus()</li>
+				<li>[ ] swoExtendedStatus()</li>
+				<li>[ ] swoData()</li>
+				<li>[ ] jtagSequence()</li>
+				<li>[ ] jtagConfigure()</li>
+				<li>[ ] jtagIDCode()</li>
+				<li>[ ] transferAbort()</li>
+				<li>[ ] executeCommands()</li>
+				<li>[ ] queueCommands()</li>
+			</ul>
 			<h3 id="daplink">DAPLink</h3>
 			<p>The <code>DAPLink</code> layer is a special derived implementation of the <code>CMSIS-DAP</code> proxy implementation. It adds DAPLink vendor specific functionality such as Mass Storage Device <code>firmware flashing</code> and <code>serial control</code>.</p>
+			<h4 id="implementation-status">Implementation Status</h4>
+			<ul>
+				<li>[x] flash()</li>
+				<li>[x] getSerialBaudrate()</li>
+				<li>[x] setSerialBaudrate()</li>
+				<li>[x] startSerialRead()</li>
+				<li>[x] stopSerialRead()</li>
+				<li>[x] serialWrite()</li>
+			</ul>
+			<h4 id="events">Events</h4>
+			<ul>
+				<li>[x] flash_progress</li>
+				<li>[x] serial_data</li>
+			</ul>
 			<h3 id="dap">DAP</h3>
 			<p>The <code>DAP</code> (Debug Access Port) layer exposes low-level access to ports, registers and memory. An implementation exists for <code>ADI</code> (Arm Debug Interface).</p>
+			<h4 id="implementation-status">Implementation Status</h4>
+			<ul>
+				<li>[x] connect()</li>
+				<li>[x] disconnect()</li>
+				<li>[x] reconnect()</li>
+				<li>[x] reset()</li>
+				<li>[x] readDP()</li>
+				<li>[x] writeDP()</li>
+				<li>[x] readAP()</li>
+				<li>[x] writeAP()</li>
+				<li>[x] readMem16()</li>
+				<li>[x] writeMem16()</li>
+				<li>[x] readMem32()</li>
+				<li>[x] writeMem32()</li>
+				<li>[x] readBlock()</li>
+				<li>[x] writeBlock()</li>
+			</ul>
 			<h3 id="processor">Processor</h3>
 			<p>The <code>Processor</code> layer exposes access to the core processor registers.</p>
+			<h4 id="implementation-status">Implementation Status</h4>
+			<ul>
+				<li>[x] getState()</li>
+				<li>[x] isHalted()</li>
+				<li>[x] halt()</li>
+				<li>[x] resume()</li>
+				<li>[x] readCoreRegister()</li>
+				<li>[x] readCoreRegisters()</li>
+				<li>[x] writeCoreRegister()</li>
+				<li>[x] execute()</li>
+				<li>[ ] step()</li>
+			</ul>
 			<h2 id="development">Development</h2>
 			<p>After cloning this repository, install the development dependencies:</p>
 			<pre><code class="lang-bash">$ npm install

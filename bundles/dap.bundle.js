@@ -981,35 +981,6 @@ var CmsisDAP = /** @class */ (function (_super) {
             .then(function () { return _this.swjSequence(new Uint8Array([0x00])); });
     };
     /**
-     * Send an SWJ Sequence
-     * https://www.keil.com/pack/doc/CMSIS/DAP/html/group__DAP__SWJ__Sequence.html
-     * @param sequence The sequence to send
-     * @returns Promise
-     */
-    CmsisDAP.prototype.swjSequence = function (sequence) {
-        var bitLength = sequence.byteLength * 8;
-        var data = this.bufferSourceToUint8Array(bitLength, sequence);
-        return this.send(18 /* DAP_SWJ_SEQUENCE */, data)
-            .then(function () { return undefined; });
-    };
-    /**
-     * Configure Transfer
-     * https://www.keil.com/pack/doc/CMSIS/DAP/html/group__DAP__TransferConfigure.html
-     * @param idleCycles Number of extra idle cycles after each transfer
-     * @param waitRetry Number of transfer retries after WAIT response
-     * @param matchRetry Number of retries on reads with Value Match in DAP_Transfer
-     * @returns Promise
-     */
-    CmsisDAP.prototype.configureTransfer = function (idleCycles, waitRetry, matchRetry) {
-        var data = new Uint8Array(5);
-        var view = new DataView(data.buffer);
-        view.setUint8(0, idleCycles);
-        view.setUint16(1, waitRetry, true);
-        view.setUint16(3, matchRetry, true);
-        return this.send(4 /* DAP_TRANSFER_CONFIGURE */, data)
-            .then(function () { return undefined; });
-    };
-    /**
      * Send a command
      * @param command Command to send
      * @param data Data to use
@@ -1045,6 +1016,66 @@ var CmsisDAP = /** @class */ (function (_super) {
             }
             return response;
         });
+    };
+    /**
+     * Get DAP information
+     * @param request Type of information to get
+     * @returns Promise of DataView
+     */
+    CmsisDAP.prototype.dapInfo = function (request) {
+        return this.send(0 /* DAP_INFO */, new Uint8Array([request]))
+            .then(function (result) {
+            var length = result.getUint8(1);
+            if (length === 0) {
+                return null;
+            }
+            switch (request) {
+                case 240 /* CAPABILITIES */:
+                case 254 /* PACKET_COUNT */:
+                case 255 /* PACKET_SIZE */:
+                case 253 /* SWO_TRACE_BUFFER_SIZE */:
+                    // Byte
+                    if (length === 1)
+                        return result.getUint8(2);
+                    // Short
+                    if (length === 2)
+                        return result.getUint16(2);
+                    // Word
+                    if (length === 4)
+                        return result.getUint32(2);
+            }
+            var ascii = new Uint8Array(result.buffer, 2, length);
+            return String.fromCharCode.apply(null, ascii);
+        });
+    };
+    /**
+     * Send an SWJ Sequence
+     * https://www.keil.com/pack/doc/CMSIS/DAP/html/group__DAP__SWJ__Sequence.html
+     * @param sequence The sequence to send
+     * @returns Promise
+     */
+    CmsisDAP.prototype.swjSequence = function (sequence) {
+        var bitLength = sequence.byteLength * 8;
+        var data = this.bufferSourceToUint8Array(bitLength, sequence);
+        return this.send(18 /* DAP_SWJ_SEQUENCE */, data)
+            .then(function () { return undefined; });
+    };
+    /**
+     * Configure Transfer
+     * https://www.keil.com/pack/doc/CMSIS/DAP/html/group__DAP__TransferConfigure.html
+     * @param idleCycles Number of extra idle cycles after each transfer
+     * @param waitRetry Number of transfer retries after WAIT response
+     * @param matchRetry Number of retries on reads with Value Match in DAP_Transfer
+     * @returns Promise
+     */
+    CmsisDAP.prototype.configureTransfer = function (idleCycles, waitRetry, matchRetry) {
+        var data = new Uint8Array(5);
+        var view = new DataView(data.buffer);
+        view.setUint8(0, idleCycles);
+        view.setUint16(1, waitRetry, true);
+        view.setUint16(3, matchRetry, true);
+        return this.send(4 /* DAP_TRANSFER_CONFIGURE */, data)
+            .then(function () { return undefined; });
     };
     /**
      * Connect to target device
@@ -1091,37 +1122,6 @@ var CmsisDAP = /** @class */ (function (_super) {
     CmsisDAP.prototype.reset = function () {
         return this.send(10 /* DAP_RESET_TARGET */)
             .then(function (response) { return response.getUint8(2) === 1 /* RESET_SEQUENCE */; });
-    };
-    /**
-     * Get DAP information
-     * @param request Type of information to get
-     * @returns Promise of DataView
-     */
-    CmsisDAP.prototype.dapInfo = function (request) {
-        return this.send(0 /* DAP_INFO */, new Uint8Array([request]))
-            .then(function (result) {
-            var length = result.getUint8(1);
-            if (length === 0) {
-                return null;
-            }
-            switch (request) {
-                case 240 /* CAPABILITIES */:
-                case 254 /* PACKET_COUNT */:
-                case 255 /* PACKET_SIZE */:
-                case 253 /* SWO_TRACE_BUFFER_SIZE */:
-                    // Byte
-                    if (length === 1)
-                        return result.getUint8(2);
-                    // Short
-                    if (length === 2)
-                        return result.getUint16(2);
-                    // Word
-                    if (length === 4)
-                        return result.getUint32(2);
-            }
-            var ascii = new Uint8Array(result.buffer, 2, length);
-            return String.fromCharCode.apply(null, ascii);
-        });
     };
     CmsisDAP.prototype.transfer = function (portOrOps, mode, register, value) {
         var operations;
