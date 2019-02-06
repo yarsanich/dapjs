@@ -18,13 +18,14 @@ export declare class DAPLink extends CmsisDAP implements Proxy {
      * Detect if buffer contains text or binary data
      */
     private isBufferBinary(buffer);
-    private writeBuffer(buffer, offset?);
+    private writeBuffer(buffer, pageSize, offset?);
     /**
      * Flash the target
      * @param buffer The image to flash
+     * @param pageSize The page size to use (defaults to 62)
      * @returns Promise
      */
-    flash(buffer: BufferSource): Promise<void>;
+    flash(buffer: BufferSource, pageSize?: number): Promise<void>;
     /**
      * Get the serial baud rate setting
      * @returns Promise of baud rate
@@ -38,8 +39,9 @@ export declare class DAPLink extends CmsisDAP implements Proxy {
     setSerialBaudrate(baudrate?: number): Promise<void>;
     /**
      * Start listening for serial data
+     * @param serialDelay The serial delay to use (defaults to 200)
      */
-    startSerialRead(): void;
+    startSerialRead(serialDelay?: number): void;
     /**
      * Stop listening for serial data
      */
