@@ -8,9 +8,9 @@ export declare class USB implements Transport {
     private interfaceClass;
     private configuration;
     private alwaysControlTransfer;
-    private interfaceNumber;
-    private endpointIn;
-    private endpointOut;
+    private interfaceNumber?;
+    private endpointIn?;
+    private endpointOut?;
     readonly packetSize = 64;
     /**
      * USB constructor

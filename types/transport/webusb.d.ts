@@ -8,7 +8,7 @@ export declare class WebUSB implements Transport {
     private device;
     private interfaceClass;
     private configuration;
-    private interfaceNumber;
+    private interfaceNumber?;
     readonly packetSize = 64;
     /**
      * WebUSB constructor

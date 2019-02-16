@@ -6,7 +6,7 @@ import { Transport } from "./";
 export declare class HID implements Transport {
     private os;
     private path;
-    private device;
+    private device?;
     readonly packetSize = 64;
     /**
      * HID constructor

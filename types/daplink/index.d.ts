@@ -13,7 +13,7 @@ export declare class DAPLink extends CmsisDAP implements Proxy {
      * @event
      */
     static EVENT_SERIAL_DATA: string;
-    private timer;
+    private timer?;
     /**
      * Detect if buffer contains text or binary data
      */

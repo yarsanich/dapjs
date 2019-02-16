@@ -47,7 +47,7 @@ export declare class CmsisDAP extends EventEmitter implements Proxy {
     /**
      * Get DAP information
      * @param request Type of information to get
-     * @returns Promise of DataView
+     * @returns Promise of number or string
      */
     dapInfo(request: DAPInfoRequest): Promise<number | string>;
     /**
@@ -115,5 +115,5 @@ export declare class CmsisDAP extends EventEmitter implements Proxy {
      * @param values The values to write
      * @returns Promise
      */
-    transferBlock(port: DAPPort, register: number, values: Uint32Array): Promise<void>;
+    transferBlock(port: DAPPort, register: number, values: Uint32Array): Promise<undefined>;
 }

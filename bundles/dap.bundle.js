@@ -32,8 +32,6 @@ var ADI = /** @class */ (function () {
     function ADI(transportOrDap, mode, clockFrequency) {
         if (mode === void 0) { mode = 0 /* DEFAULT */; }
         if (clockFrequency === void 0) { clockFrequency = cmsis_dap_1.DEFAULT_CLOCK_FREQUENCY; }
-        this.selectedAddress = null;
-        this.cswValue = null;
         function isTransport(test) {
             return test.open !== undefined;
         }
@@ -47,7 +45,7 @@ var ADI = /** @class */ (function () {
     /**
      * Continually run a function until it returns true
      * @param fn The function to run
-     * @param timer The millisecoinds to wait between each run
+     * @param timer The milliseconds to wait between each run
      * @param timeout Optional timeout to wait before giving up and rejecting
      * @returns Promise
      */
@@ -57,13 +55,13 @@ var ADI = /** @class */ (function () {
         if (timeout === void 0) { timeout = 0; }
         var running = true;
         var chain = function (condition) {
-            if (running) {
-                return condition
-                    ? Promise.resolve()
-                    : _this.delay(timer)
-                        .then(fn)
-                        .then(chain);
-            }
+            if (!running)
+                return Promise.resolve();
+            return condition
+                ? Promise.resolve()
+                : _this.delay(timer)
+                    .then(fn)
+                    .then(chain);
         };
         return new Promise(function (resolve, reject) {
             if (timeout > 0) {
@@ -161,7 +159,8 @@ var ADI = /** @class */ (function () {
     ADI.prototype.transferSequence = function (operations) {
         var _this = this;
         // Flatten operations into single array
-        var merged = [].concat.apply([], operations);
+        var merged = [];
+        merged = merged.concat.apply(merged, operations);
         var chain = Promise.resolve([]);
         var _loop_1 = function () {
             var sequence = merged.splice(0, this_1.proxy.operationCount);
@@ -443,15 +442,14 @@ var DEFAULT_PAGE_SIZE = 62;
 var DAPLink = /** @class */ (function (_super) {
     __extends(DAPLink, _super);
     function DAPLink() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.timer = null;
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     /**
      * Detect if buffer contains text or binary data
      */
     DAPLink.prototype.isBufferBinary = function (buffer) {
-        var bufferString = String.fromCharCode.apply(null, new Uint16Array(buffer, 0, 50));
+        var numberArray = Array.prototype.slice.call(new Uint16Array(buffer, 0, 50));
+        var bufferString = String.fromCharCode.apply(null, numberArray);
         for (var i = 0; i < bufferString.length; i++) {
             var charCode = bufferString.charCodeAt(i);
             // 65533 is a code for unknown character
@@ -476,6 +474,7 @@ var DAPLink = /** @class */ (function (_super) {
             if (end < buffer.byteLength) {
                 return _this.writeBuffer(buffer, pageSize, end);
             }
+            return Promise.resolve();
         });
     };
     /**
@@ -496,7 +495,7 @@ var DAPLink = /** @class */ (function (_super) {
             .then(function (result) {
             // An error occurred
             if (result.getUint8(1) !== 0)
-                return;
+                return Promise.reject("Flash error");
             return _this.writeBuffer(arrayBuffer, pageSize);
         })
             .then(function () {
@@ -506,7 +505,7 @@ var DAPLink = /** @class */ (function (_super) {
             .then(function (result) {
             // An error occurred
             if (result.getUint8(1) !== 0)
-                return;
+                return Promise.reject("Flash error");
             return _this.send(137 /* RESET */);
         })
             .then(function () { return undefined; });
@@ -550,7 +549,8 @@ var DAPLink = /** @class */ (function (_super) {
                     if (dataLength !== 0) {
                         var offset = 2;
                         var dataArray = serialData.buffer.slice(offset, offset + dataLength);
-                        var data = String.fromCharCode.apply(null, new Uint8Array(dataArray));
+                        var numberArray = Array.prototype.slice.call(new Uint8Array(dataArray));
+                        var data = String.fromCharCode.apply(null, numberArray);
                         _this.emit(DAPLink.EVENT_SERIAL_DATA, data);
                     }
                 }
@@ -563,7 +563,7 @@ var DAPLink = /** @class */ (function (_super) {
     DAPLink.prototype.stopSerialRead = function () {
         if (this.timer) {
             clearInterval(this.timer);
-            this.timer = null;
+            this.timer = undefined;
         }
     };
     /**
@@ -721,11 +721,11 @@ var CortexM = /** @class */ (function (_super) {
         return this.isHalted()
             .then(function (halted) {
             if (halted)
-                return;
+                return Promise.resolve();
             return _this.writeMem32(3758157296 /* DHCSR */, -1604386816 /* DBGKEY */ | 1 /* C_DEBUGEN */ | 2 /* C_HALT */)
                 .then(function () {
                 if (!wait)
-                    return;
+                    return Promise.resolve();
                 return _this.waitDelay(function () { return _this.isHalted(); }, 100, timeout);
             });
         });
@@ -743,12 +743,12 @@ var CortexM = /** @class */ (function (_super) {
         return this.isHalted()
             .then(function (halted) {
             if (!halted)
-                return;
+                return Promise.resolve();
             return _this.writeMem32(3758157104 /* DFSR */, 4 /* DWTTRAP */ | 2 /* BKPT */ | 1 /* HALTED */)
                 .then(function () { return _this.enableDebug(); })
                 .then(function () {
                 if (!wait)
-                    return;
+                    return Promise.resolve();
                 return _this.waitDelay(function () { return _this.isHalted().then(function (result) { return !result; }); }, 100, timeout);
             });
         });
@@ -841,8 +841,7 @@ var CortexM = /** @class */ (function (_super) {
             .then(function () { return _this.transferSequence(sequence); }) // Write the registers
             .then(function () { return _this.writeBlock(address, code); }) // Write the code to the address
             .then(function () { return _this.resume(false); }) // Resume the target, without waiting
-            .then(function () { return _this.waitDelay(function () { return _this.isHalted(); }, 100, EXECUTE_TIMEOUT); }) // Wait for the target to halt on the breakpoint
-            .then(function () { return undefined; }); // Return
+            .then(function () { return _this.waitDelay(function () { return _this.isHalted(); }, 100, EXECUTE_TIMEOUT); }); // Wait for the target to halt on the breakpoint
     };
     return CortexM;
 }(dap_1.ADI));
@@ -1039,14 +1038,14 @@ var CmsisDAP = /** @class */ (function (_super) {
     /**
      * Get DAP information
      * @param request Type of information to get
-     * @returns Promise of DataView
+     * @returns Promise of number or string
      */
     CmsisDAP.prototype.dapInfo = function (request) {
         return this.send(0 /* DAP_INFO */, new Uint8Array([request]))
             .then(function (result) {
             var length = result.getUint8(1);
             if (length === 0) {
-                return null;
+                throw new Error("DAP Info Failure");
             }
             switch (request) {
                 case 240 /* CAPABILITIES */:
@@ -1063,7 +1062,7 @@ var CmsisDAP = /** @class */ (function (_super) {
                     if (length === 4)
                         return result.getUint32(2);
             }
-            var ascii = new Uint8Array(result.buffer, 2, length);
+            var ascii = Array.prototype.slice.call(new Uint8Array(result.buffer, 2, length));
             return String.fromCharCode.apply(null, ascii);
         });
     };
@@ -1143,6 +1142,9 @@ var CmsisDAP = /** @class */ (function (_super) {
             .then(function (response) { return response.getUint8(2) === 1 /* RESET_SEQUENCE */; });
     };
     CmsisDAP.prototype.transfer = function (portOrOps, mode, register, value) {
+        if (mode === void 0) { mode = 2 /* READ */; }
+        if (register === void 0) { register = 0; }
+        if (value === void 0) { value = 0; }
         var operations;
         if (typeof portOrOps === "number") {
             operations = [{
@@ -1166,7 +1168,7 @@ var CmsisDAP = /** @class */ (function (_super) {
             // Transfer request
             view.setUint8(offset, operation.port | operation.mode | operation.register);
             // Transfer data
-            view.setUint32(offset + 1, operation.value, true);
+            view.setUint32(offset + 1, operation.value || 0, true);
         });
         return this.send(5 /* DAP_TRANSFER */, data)
             .then(function (result) {
@@ -1194,10 +1196,8 @@ var CmsisDAP = /** @class */ (function (_super) {
             if (typeof portOrOps === "number") {
                 return result.getUint32(3, true);
             }
-            else {
-                var length_1 = operations.length * 4;
-                return new Uint32Array(result.buffer.slice(3, 3 + length_1));
-            }
+            var length = operations.length * 4;
+            return new Uint32Array(result.buffer.slice(3, 3 + length));
         });
     };
     CmsisDAP.prototype.transferBlock = function (port, register, countOrValues) {
@@ -1248,6 +1248,7 @@ var CmsisDAP = /** @class */ (function (_super) {
             if (typeof countOrValues === "number") {
                 return new Uint32Array(result.buffer.slice(4));
             }
+            return undefined;
         });
     };
     return CmsisDAP;
@@ -1323,8 +1324,6 @@ var HID = /** @class */ (function () {
      */
     function HID(deviceOrPath) {
         this.os = os_1.platform();
-        this.path = null;
-        this.device = null;
         this.packetSize = 64;
         function isDevice(source) {
             return source.path !== undefined;
@@ -1359,7 +1358,6 @@ var HID = /** @class */ (function () {
         return new Promise(function (resolve, _reject) {
             if (_this.device) {
                 _this.device.close();
-                _this.device = null;
             }
             resolve();
         });
@@ -1371,6 +1369,8 @@ var HID = /** @class */ (function () {
     HID.prototype.read = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
+            if (!_this.device)
+                return reject("No device opened");
             _this.device.read(function (error, data) {
                 if (error) {
                     return reject(error);
@@ -1388,6 +1388,8 @@ var HID = /** @class */ (function () {
     HID.prototype.write = function (data) {
         var _this = this;
         return new Promise(function (resolve, reject) {
+            if (!_this.device)
+                return reject("No device opened");
             function isView(source) {
                 return source.buffer !== undefined;
             }
@@ -1562,8 +1564,8 @@ var USB = /** @class */ (function () {
                 // If we always want to use control transfer, don't find/set endpoints and claim interface
                 if (!_this.alwaysControlTransfer) {
                     var endpoints = selectedInterface.endpoints;
-                    _this.endpointIn = null;
-                    _this.endpointOut = null;
+                    _this.endpointIn = undefined;
+                    _this.endpointOut = undefined;
                     for (var _i = 0, endpoints_1 = endpoints; _i < endpoints_1.length; _i++) {
                         var endpoint = endpoints_1[_i];
                         if (endpoint.direction === "in")
@@ -1578,8 +1580,8 @@ var USB = /** @class */ (function () {
                             selectedInterface.claim();
                         }
                         catch (_e) {
-                            _this.endpointIn = null;
-                            _this.endpointOut = null;
+                            _this.endpointIn = undefined;
+                            _this.endpointOut = undefined;
                         }
                     }
                 }
@@ -1605,18 +1607,23 @@ var USB = /** @class */ (function () {
     USB.prototype.read = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
+            if (!_this.interfaceNumber)
+                return reject("No device opened");
             // Use endpoint if it exists
             if (_this.endpointIn) {
-                return _this.endpointIn.transfer(_this.packetSize, function (error, buffer) {
+                _this.endpointIn.transfer(_this.packetSize, function (error, buffer) {
                     if (error)
                         return reject(error);
                     resolve(_this.bufferToDataView(buffer));
                 });
+                return;
             }
             // Fallback to using control transfer
             _this.device.controlTransfer(usb_1.LIBUSB_ENDPOINT_IN | usb_1.LIBUSB_REQUEST_TYPE_CLASS | usb_1.LIBUSB_RECIPIENT_INTERFACE, GET_REPORT, IN_REPORT, _this.interfaceNumber, _this.packetSize, function (error, buffer) {
                 if (error)
                     return reject(error);
+                if (!buffer)
+                    return reject("No buffer read");
                 resolve(_this.bufferToDataView(buffer));
             });
         });
@@ -1631,13 +1638,16 @@ var USB = /** @class */ (function () {
         var extended = this.extendBuffer(data, this.packetSize);
         var buffer = this.bufferSourceToBuffer(extended);
         return new Promise(function (resolve, reject) {
+            if (!_this.interfaceNumber)
+                return reject("No device opened");
             // Use endpoint if it exists
             if (_this.endpointOut) {
-                return _this.endpointOut.transfer(buffer, function (error) {
+                _this.endpointOut.transfer(buffer, function (error) {
                     if (error)
                         return reject(error);
                     resolve();
                 });
+                return;
             }
             // Fallback to using control transfer
             _this.device.controlTransfer(usb_1.LIBUSB_ENDPOINT_OUT | usb_1.LIBUSB_REQUEST_TYPE_CLASS | usb_1.LIBUSB_RECIPIENT_INTERFACE, SET_REPORT, OUT_REPORT, _this.interfaceNumber, buffer, function (error) {
@@ -1763,6 +1773,8 @@ var WebUSB = /** @class */ (function () {
      * @returns Promise of DataView
      */
     WebUSB.prototype.read = function () {
+        if (!this.interfaceNumber)
+            return Promise.reject("No device opened");
         return this.device.controlTransferIn({
             requestType: "class",
             recipient: "interface",
@@ -1778,6 +1790,8 @@ var WebUSB = /** @class */ (function () {
      * @returns Promise
      */
     WebUSB.prototype.write = function (data) {
+        if (!this.interfaceNumber)
+            return Promise.reject("No device opened");
         var buffer = this.extendBuffer(data, this.packetSize);
         return this.device.controlTransferOut({
             requestType: "class",

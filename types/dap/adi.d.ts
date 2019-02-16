@@ -7,8 +7,8 @@ import { DAPProtocol } from "../proxy/enums";
  * Arm Debug Interface class
  */
 export declare class ADI implements DAP {
-    private selectedAddress;
-    private cswValue;
+    private selectedAddress?;
+    private cswValue?;
     private proxy;
     /**
      * ADI constructor
@@ -26,7 +26,7 @@ export declare class ADI implements DAP {
     /**
      * Continually run a function until it returns true
      * @param fn The function to run
-     * @param timer The millisecoinds to wait between each run
+     * @param timer The milliseconds to wait between each run
      * @param timeout Optional timeout to wait before giving up and rejecting
      * @returns Promise
      */
