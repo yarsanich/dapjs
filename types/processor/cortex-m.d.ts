@@ -6,7 +6,7 @@ import { DAPOperation } from "../proxy";
  * Cortex M class
  */
 export declare class CortexM extends ADI implements Processor {
-    private enableDebug();
+    private enableDebug;
     protected readCoreRegisterCommand(register: number): DAPOperation[];
     protected writeCoreRegisterCommand(register: number, value: number): DAPOperation[];
     /**

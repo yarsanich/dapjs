@@ -21,7 +21,7 @@ export declare const enum CoreState {
     /**
      * The core is running
      */
-    RUNNING = 4,
+    RUNNING = 4
 }
 /**
  * Processor Core Registers
@@ -111,7 +111,7 @@ export declare const enum CoreRegister {
     /**
      * Controls the stack used
      */
-    CONTROL = 20,
+    CONTROL = 20
 }
 /**
  * Debug Registers
@@ -137,7 +137,7 @@ export declare const enum DebugRegister {
     /**
      * Debug Exception and Monitor Control Register
      */
-    DEMCR = 3758157308,
+    DEMCR = 3758157308
 }
 /**
  * Debug Halting Control and Status Register
@@ -192,7 +192,7 @@ export declare const enum DhcsrMask {
     /**
      * Debug Key
      */
-    DBGKEY = -1604386816,
+    DBGKEY = -1604386816
 }
 /**
  * Debug Fault Status Register Mask
@@ -219,7 +219,7 @@ export declare const enum DfsrMask {
     /**
      * External debug request (EDBGRQ) has halted the core
      */
-    EXTERNAL = 16,
+    EXTERNAL = 16
 }
 /**
  * Debug Core Register Selector Register Mask
@@ -234,7 +234,7 @@ export declare const enum DcrsrMask {
     /**
      * Register select - DebugReturnAddress & PSR/Flags, Execution Number, and state information
      */
-    REGSEL = 31,
+    REGSEL = 31
 }
 /**
  * Flash Patch and Breakpoint Registers
@@ -281,7 +281,7 @@ export declare const enum FPBRegister {
     /**
      * FlashPatch Comparator Register7
      */
-    FP_COMP7 = 3758104612,
+    FP_COMP7 = 3758104612
 }
 /**
  * Flash Patch and Breakpoint Control Register Mask
@@ -296,5 +296,5 @@ export declare enum FPBCtrlMask {
     /**
      * Key field which enables writing to the Flash Patch Control Register
      */
-    KEY = 2,
+    KEY = 2
 }

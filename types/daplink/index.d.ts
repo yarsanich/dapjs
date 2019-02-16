@@ -17,8 +17,8 @@ export declare class DAPLink extends CmsisDAP implements Proxy {
     /**
      * Detect if buffer contains text or binary data
      */
-    private isBufferBinary(buffer);
-    private writeBuffer(buffer, pageSize, offset?);
+    private isBufferBinary;
+    private writeBuffer;
     /**
      * Flash the target
      * @param buffer The image to flash

@@ -18,7 +18,7 @@ export declare const enum DAPLinkSerial {
     /**
      * Write to serial
      */
-    WRITE = 132,
+    WRITE = 132
 }
 /**
  * Vendor-specific commands for DapLink mass-storage device flashing
@@ -40,5 +40,5 @@ export declare const enum DAPLinkFlash {
     /**
      * Write the image
      */
-    WRITE = 140,
+    WRITE = 140
 }

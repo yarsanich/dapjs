@@ -9,7 +9,7 @@ export declare class WebUSB implements Transport {
     private interfaceClass;
     private configuration;
     private interfaceNumber;
-    readonly packetSize: number;
+    readonly packetSize = 64;
     /**
      * WebUSB constructor
      * @param device WebUSB device to use
@@ -17,7 +17,7 @@ export declare class WebUSB implements Transport {
      * @param configuration Optional Configuration to use (default: 1)
      */
     constructor(device: USBDevice, interfaceClass?: number, configuration?: number);
-    private extendBuffer(data, packetSize);
+    private extendBuffer;
     /**
      * Open device
      * @returns Promise

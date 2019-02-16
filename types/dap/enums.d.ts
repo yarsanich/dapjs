@@ -46,7 +46,7 @@ export declare const enum DPRegister {
     /**
      * Target Selection, write only
      */
-    TARGETSEL = 12,
+    TARGETSEL = 12
 }
 /**
  * Access Port Registers
@@ -92,7 +92,7 @@ export declare const enum APRegister {
     /**
      * Identification Register
      */
-    IDR = 252,
+    IDR = 252
 }
 /**
  * Abort Register Mask
@@ -118,7 +118,7 @@ export declare const enum AbortMask {
     /**
      * Sets the STICKYORUN overrun error flag to 0
      */
-    ORUNERRCLR = 16,
+    ORUNERRCLR = 16
 }
 /**
  * Control/Status Register Mask
@@ -172,7 +172,7 @@ export declare const enum CtrlStatMask {
     /**
      * System powerup acknowledge, read only
      */
-    CSYSPWRUPACK = -2147483648,
+    CSYSPWRUPACK = -2147483648
 }
 /**
  * Control/Status Word Register Mask
@@ -224,7 +224,7 @@ export declare const enum CSWMask {
      * Common mask value
      * @hidden
      */
-    VALUE = 587202640,
+    VALUE = 587202640
 }
 /**
  * Debug Port Bank Select
@@ -250,7 +250,7 @@ export declare const enum DPBankSelect {
     /**
      * EVENTSTAT
      */
-    EVENTSTAT = 4,
+    EVENTSTAT = 4
 }
 /**
  * Bank Select Mask
@@ -268,7 +268,7 @@ export declare const enum BankSelectMask {
     /**
      * Selects the register that appears at DP register 0x4
      */
-    DPBANKSEL = 15,
+    DPBANKSEL = 15
 }
 /**
  * Event Status Mask
@@ -278,5 +278,5 @@ export declare const enum EventStatMask {
     /**
      * Event status flag, indicates that the processor is halted when set to 0
      */
-    EA = 1,
+    EA = 1
 }

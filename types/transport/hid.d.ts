@@ -7,7 +7,7 @@ export declare class HID implements Transport {
     private os;
     private path;
     private device;
-    readonly packetSize: number;
+    readonly packetSize = 64;
     /**
      * HID constructor
      * @param path Path to HID device to use

@@ -11,7 +11,7 @@ export declare class USB implements Transport {
     private interfaceNumber;
     private endpointIn;
     private endpointOut;
-    readonly packetSize: number;
+    readonly packetSize = 64;
     /**
      * USB constructor
      * @param device USB device to use
@@ -20,9 +20,9 @@ export declare class USB implements Transport {
      * @param alwaysControlTransfer Whether to always use control transfer instead of endpoints (default: false)
      */
     constructor(device: Device, interfaceClass?: number, configuration?: number, alwaysControlTransfer?: boolean);
-    private bufferToDataView(buffer);
-    private bufferSourceToBuffer(bufferSource);
-    private extendBuffer(data, packetSize);
+    private bufferToDataView;
+    private bufferSourceToBuffer;
+    private extendBuffer;
     /**
      * Open device
      * @returns Promise

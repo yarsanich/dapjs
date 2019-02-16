@@ -14,7 +14,7 @@ export declare const enum DAPProtocol {
     /**
      * JTAG mode: connect with 4/5-pin JTAG mode
      */
-    JTAG = 2,
+    JTAG = 2
 }
 /**
  * DAP Ports
@@ -27,7 +27,7 @@ export declare const enum DAPPort {
     /**
      * Access Port (AP)
      */
-    ACCESS = 1,
+    ACCESS = 1
 }
 /**
  * DAP Register Transfer Modes
@@ -40,7 +40,7 @@ export declare const enum DAPTransferMode {
     /**
      * Read
      */
-    READ = 2,
+    READ = 2
 }
 /**
  * CMSIS-DAP Commands
@@ -158,7 +158,7 @@ export declare const enum DAPCommand {
     /**
      * Queue multiple DAP commands provided in a multiple packets
      */
-    DAP_QUEUE_COMMANDS = 126,
+    DAP_QUEUE_COMMANDS = 126
 }
 /**
  * CMSIS-DAP Command Response
@@ -172,7 +172,7 @@ export declare const enum DAPResponse {
     /**
      * Error
      */
-    DAP_ERROR = 255,
+    DAP_ERROR = 255
 }
 /**
  * Get Information about CMSIS-DAP Debug Unit
@@ -222,7 +222,7 @@ export declare const enum DAPInfoRequest {
     /**
      * Get the maximum Packet Size (SHORT)
      */
-    PACKET_SIZE = 255,
+    PACKET_SIZE = 255
 }
 /**
  * CMSIS-DAP Host Status Type
@@ -237,7 +237,7 @@ export declare const enum DAPHostStatusType {
     /**
      * Running: Status indicates that the target hardware is executing application code
      */
-    RUNNING = 1,
+    RUNNING = 1
 }
 /**
  * CMSIS-DAP Host Status Response
@@ -252,7 +252,7 @@ export declare const enum DAPHostStatusResponse {
     /**
      * True: may be used to turn on a status LED (Connect or Running) on the Debug Unit
      */
-    TRUE = 1,
+    TRUE = 1
 }
 /**
  * CMSIS-DAP Connect Response
@@ -271,7 +271,7 @@ export declare const enum DAPConnectResponse {
     /**
      * Initialization for JTAG mode
      */
-    JTAG = 2,
+    JTAG = 2
 }
 /**
  * CMSIS-DAP Reset Target Execute Response
@@ -286,7 +286,7 @@ export declare const enum DAPResetTargeResponse {
     /**
      * A device specific reset sequence is implemented
      */
-    RESET_SEQUENCE = 1,
+    RESET_SEQUENCE = 1
 }
 /**
  * CMSIS-DAP SWO Transport
@@ -305,7 +305,7 @@ export declare const enum DAPSWOTransport {
     /**
      * Send trace data via separate WinUSB endpoint (requires CMSIS-DAP v2 configuration)
      */
-    SEND = 2,
+    SEND = 2
 }
 /**
  * CMSIS-DAP SWO Mode
@@ -324,7 +324,7 @@ export declare const enum DAPSWOMode {
     /**
      * Manchester
      */
-    MANCHESTER = 2,
+    MANCHESTER = 2
 }
 /**
  * CMSIS-DAP SWO Control
@@ -339,7 +339,7 @@ export declare const enum DAPSWOControl {
     /**
      * Start
      */
-    START = 1,
+    START = 1
 }
 /**
  * CMSIS-DAP Transfer Response
@@ -370,5 +370,5 @@ export declare const enum DAPTransferResponse {
     /**
      * Value Mismatch (Read Register with Value Match)
      */
-    VALUE_MISMATCH = 16,
+    VALUE_MISMATCH = 16
 }

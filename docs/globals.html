@@ -102,15 +102,14 @@
 	<div class="content-wrap">
 		<div class="tsd-panel tsd-typography">
 			<h1 id="dap-js">DAP.js</h1>
-			<p><a href="https://circleci.com/gh/ARMmbed/dapjs/"><img src="https://circleci.com/gh/ARMmbed/dapjs.svg?style=shield&amp;circle-token=d37ef109d0134f6f8e4eb12a65214a8b159f77d8" alt="Circle CI"></a>
+			<p><a href="https://circleci.com/gh/ARMmbed/dapjs/"><img src="https://circleci.com/gh/ARMmbed/dapjs.svg?style=shield&circle-token=d37ef109d0134f6f8e4eb12a65214a8b159f77d8" alt="Circle CI"></a>
 			<a href="https://spdx.org/licenses/MIT.html"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a></p>
 			<p>DAP.js is a JavaScript interface to <a href="https://www.keil.com/pack/doc/CMSIS/DAP/html/index.html">CMSIS-DAP</a>, enabling access to Arm Microcontrollers using <a href="https://nodejs.org/">Node.js</a> or in the browser using <a href="https://wicg.github.io/webusb/">WebUSB</a>.</p>
 			<h2 id="prerequisites">Prerequisites</h2>
 			<p><a href="https://nodejs.org">Node.js &gt; v6.10.0</a>, which includes <code>npm</code></p>
 			<h2 id="installation">Installation</h2>
 			<p>The package is distributed using npm. To install the package in your project:</p>
-			<pre><code class="lang-bash">$ npm install dapjs
-</code></pre>
+			<pre><code class="language-bash">$ npm install dapjs</code></pre>
 			<h2 id="getting-started">Getting Started</h2>
 			<p>Decide on a transport layer to use (see below) and refer to the <a href="https://github.com/ARMmbed/dapjs/tree/master/examples/">examples folder</a> to get started.</p>
 			<p>The web example can be seen running at:</p>
@@ -141,18 +140,15 @@
 			<p><strong>Note:</strong> WebUSB in the browser doesn&#39;t require any further libraries to be installed.</p>
 			<p>If you also want your program to work in a Node.js environment a <a href="https://github.com/thegecko/webusb">WebUSB library</a> exists to allow your program to be ported to Node.js.</p>
 			<p>To install the library for Node.js, use:</p>
-			<pre><code class="lang-bash">$ npm install webusb
-</code></pre>
+			<pre><code class="language-bash">$ npm install webusb</code></pre>
 			<h4 id="example">Example</h4>
 			<p>In the browser, require the library:</p>
-			<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/javascript"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"bundles/dap.bundle.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-</code></pre>
+			<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/javascript"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"bundles/dap.bundle.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
 			<p>In Node.js Require the libraries:</p>
-			<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> usb = <span class="hljs-built_in">require</span>(<span class="hljs-string">"webusb"</span>).usb;
-<span class="hljs-keyword">const</span> DAPjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"dapjs"</span>);
-</code></pre>
+			<pre><code class="language-javascript"><span class="hljs-keyword">const</span> usb = <span class="hljs-built_in">require</span>(<span class="hljs-string">"webusb"</span>).usb;
+<span class="hljs-keyword">const</span> DAPjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"dapjs"</span>);</code></pre>
 			<p>Then in either environment:</p>
-			<pre><code class="lang-javascript">&lt;navigator&gt;.usb.requestDevice({
+			<pre><code class="language-javascript">&lt;navigator&gt;.usb.requestDevice({
     <span class="hljs-attr">filters</span>: [{<span class="hljs-attr">vendorId</span>: <span class="hljs-number">0xD28</span>}]
 })
 .then(<span class="hljs-function"><span class="hljs-params">device</span> =&gt;</span> {
@@ -166,8 +162,7 @@
 .catch(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> {
     <span class="hljs-built_in">console</span>.error(error.message || error);
     process.exit();
-});
-</code></pre>
+});</code></pre>
 			<h4 id="pros">Pros</h4>
 			<ul>
 				<li>Works in the browser</li>
@@ -179,10 +174,9 @@
 			</ul>
 			<h3 id="hid">HID</h3>
 			<p>For the highest level of firmware compatibility in a Node.js environment, the HID transport is recommended. This utilises the <code>node-hid</code> library and is installed as follows:</p>
-			<pre><code class="lang-bash">$ npm install node-hid
-</code></pre>
+			<pre><code class="language-bash">$ npm install node-hid</code></pre>
 			<h4 id="example">Example</h4>
-			<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> hid = <span class="hljs-built_in">require</span>(<span class="hljs-string">"node-hid"</span>);
+			<pre><code class="language-javascript"><span class="hljs-keyword">const</span> hid = <span class="hljs-built_in">require</span>(<span class="hljs-string">"node-hid"</span>);
 <span class="hljs-keyword">const</span> DAPjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"dapjs"</span>);
 
 <span class="hljs-keyword">let</span> devices = hid.devices();
@@ -197,8 +191,7 @@ daplink.connect()
 .catch(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> {
     <span class="hljs-built_in">console</span>.error(error.message || error);
     process.exit();
-});
-</code></pre>
+});</code></pre>
 			<h4 id="pros">Pros</h4>
 			<ul>
 				<li>Compatible with older CMSIS-DAP firmware.</li>
@@ -210,10 +203,9 @@ daplink.connect()
 			<h3 id="usb">USB</h3>
 			<p>A &quot;pure&quot; USB transport exists which bypasses requiring <code>WebUSB</code> and <code>HID</code>.
 			This utilises the <code>usb</code> library and is installed as follows:</p>
-			<pre><code class="lang-bash">$ npm install usb
-</code></pre>
+			<pre><code class="language-bash">$ npm install usb</code></pre>
 			<h4 id="example">Example</h4>
-			<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> usb = <span class="hljs-built_in">require</span>(<span class="hljs-string">"usb"</span>);
+			<pre><code class="language-javascript"><span class="hljs-keyword">const</span> usb = <span class="hljs-built_in">require</span>(<span class="hljs-string">"usb"</span>);
 <span class="hljs-keyword">const</span> DAPjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"dapjs"</span>);
 
 <span class="hljs-keyword">let</span> devices = usb.getDeviceList();
@@ -228,8 +220,7 @@ daplink.connect()
 .catch(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> {
     <span class="hljs-built_in">console</span>.error(error.message || error);
     process.exit();
-});
-</code></pre>
+});</code></pre>
 			<h4 id="pros">Pros</h4>
 			<ul>
 				<li>Doesn&#39;t require HID access to JavaScript in your OS.</li>
@@ -245,119 +236,114 @@ daplink.connect()
 			<p>The <code>Transport</code> layer offers access to the USB device plugged into the host. Different transports are available based on user needs (see above).</p>
 			<h4 id="implementation-status">Implementation Status</h4>
 			<ul>
-				<li>[x] packetSize</li>
-				<li>[x] open()</li>
-				<li>[x] close()</li>
-				<li>[x] read()</li>
-				<li>[x] write()</li>
+				<li><input checked="" disabled="" type="checkbox"> packetSize</li>
+				<li><input checked="" disabled="" type="checkbox"> open()</li>
+				<li><input checked="" disabled="" type="checkbox"> close()</li>
+				<li><input checked="" disabled="" type="checkbox"> read()</li>
+				<li><input checked="" disabled="" type="checkbox"> write()</li>
 			</ul>
 			<h3 id="proxy">Proxy</h3>
 			<p>The <code>Proxy</code> layer uses the transport layer to expose low-level <code>CMSIS-DAP</code> commands to the next layer. A common use for the proxy is as a debug chip attached to the main processor accessed over USB.</p>
 			<p>A CMSIS-DAP implementation is included, however a network proxy or similar could be introduced at this layer in order to remote commands.</p>
 			<h4 id="implementation-status">Implementation Status</h4>
 			<ul>
-				<li>[x] operationCount</li>
-				<li>[x] blockSize</li>
-				<li>[x] dapInfo()</li>
-				<li>[x] swjSequence()</li>
-				<li>[x] swjClock()</li>
-				<li>[x] transferConfigure()</li>
-				<li>[x] connect()</li>
-				<li>[x] disconnect()</li>
-				<li>[x] reconnect()</li>
-				<li>[x] reset()</li>
-				<li>[x] transfer()</li>
-				<li>[x] transferBlock()</li>
-				<li>[ ] hostStatus()</li>
-				<li>[ ] delay()</li>
-				<li>[ ] writeAbort()</li>
-				<li>[ ] swjPins()</li>
-				<li>[ ] swdSequence()</li>
-				<li>[ ] swdConfigure()</li>
-				<li>[ ] swoTransport()</li>
-				<li>[ ] swoMode()</li>
-				<li>[ ] swoBaudrate()</li>
-				<li>[ ] swoControl()</li>
-				<li>[ ] swoStatus()</li>
-				<li>[ ] swoExtendedStatus()</li>
-				<li>[ ] swoData()</li>
-				<li>[ ] jtagSequence()</li>
-				<li>[ ] jtagConfigure()</li>
-				<li>[ ] jtagIDCode()</li>
-				<li>[ ] transferAbort()</li>
-				<li>[ ] executeCommands()</li>
-				<li>[ ] queueCommands()</li>
+				<li><input checked="" disabled="" type="checkbox"> operationCount</li>
+				<li><input checked="" disabled="" type="checkbox"> blockSize</li>
+				<li><input checked="" disabled="" type="checkbox"> dapInfo()</li>
+				<li><input checked="" disabled="" type="checkbox"> swjSequence()</li>
+				<li><input checked="" disabled="" type="checkbox"> swjClock()</li>
+				<li><input checked="" disabled="" type="checkbox"> transferConfigure()</li>
+				<li><input checked="" disabled="" type="checkbox"> connect()</li>
+				<li><input checked="" disabled="" type="checkbox"> disconnect()</li>
+				<li><input checked="" disabled="" type="checkbox"> reconnect()</li>
+				<li><input checked="" disabled="" type="checkbox"> reset()</li>
+				<li><input checked="" disabled="" type="checkbox"> transfer()</li>
+				<li><input checked="" disabled="" type="checkbox"> transferBlock()</li>
+				<li><input disabled="" type="checkbox"> hostStatus()</li>
+				<li><input disabled="" type="checkbox"> delay()</li>
+				<li><input disabled="" type="checkbox"> writeAbort()</li>
+				<li><input disabled="" type="checkbox"> swjPins()</li>
+				<li><input disabled="" type="checkbox"> swdSequence()</li>
+				<li><input disabled="" type="checkbox"> swdConfigure()</li>
+				<li><input disabled="" type="checkbox"> swoTransport()</li>
+				<li><input disabled="" type="checkbox"> swoMode()</li>
+				<li><input disabled="" type="checkbox"> swoBaudrate()</li>
+				<li><input disabled="" type="checkbox"> swoControl()</li>
+				<li><input disabled="" type="checkbox"> swoStatus()</li>
+				<li><input disabled="" type="checkbox"> swoExtendedStatus()</li>
+				<li><input disabled="" type="checkbox"> swoData()</li>
+				<li><input disabled="" type="checkbox"> jtagSequence()</li>
+				<li><input disabled="" type="checkbox"> jtagConfigure()</li>
+				<li><input disabled="" type="checkbox"> jtagIDCode()</li>
+				<li><input disabled="" type="checkbox"> transferAbort()</li>
+				<li><input disabled="" type="checkbox"> executeCommands()</li>
+				<li><input disabled="" type="checkbox"> queueCommands()</li>
 			</ul>
 			<h3 id="daplink">DAPLink</h3>
 			<p>The <code>DAPLink</code> layer is a special derived implementation of the <code>CMSIS-DAP</code> proxy implementation. It adds DAPLink vendor specific functionality such as Mass Storage Device <code>firmware flashing</code> and <code>serial control</code>.</p>
 			<h4 id="implementation-status">Implementation Status</h4>
 			<ul>
-				<li>[x] flash()</li>
-				<li>[x] getSerialBaudrate()</li>
-				<li>[x] setSerialBaudrate()</li>
-				<li>[x] startSerialRead()</li>
-				<li>[x] stopSerialRead()</li>
-				<li>[x] serialWrite()</li>
+				<li><input checked="" disabled="" type="checkbox"> flash()</li>
+				<li><input checked="" disabled="" type="checkbox"> getSerialBaudrate()</li>
+				<li><input checked="" disabled="" type="checkbox"> setSerialBaudrate()</li>
+				<li><input checked="" disabled="" type="checkbox"> startSerialRead()</li>
+				<li><input checked="" disabled="" type="checkbox"> stopSerialRead()</li>
+				<li><input checked="" disabled="" type="checkbox"> serialWrite()</li>
 			</ul>
 			<h4 id="events">Events</h4>
 			<ul>
-				<li>[x] flash_progress</li>
-				<li>[x] serial_data</li>
+				<li><input checked="" disabled="" type="checkbox"> flash_progress</li>
+				<li><input checked="" disabled="" type="checkbox"> serial_data</li>
 			</ul>
 			<h3 id="dap">DAP</h3>
 			<p>The <code>DAP</code> (Debug Access Port) layer exposes low-level access to ports, registers and memory. An implementation exists for <code>ADI</code> (Arm Debug Interface).</p>
 			<h4 id="implementation-status">Implementation Status</h4>
 			<ul>
-				<li>[x] connect()</li>
-				<li>[x] disconnect()</li>
-				<li>[x] reconnect()</li>
-				<li>[x] reset()</li>
-				<li>[x] readDP()</li>
-				<li>[x] writeDP()</li>
-				<li>[x] readAP()</li>
-				<li>[x] writeAP()</li>
-				<li>[x] readMem16()</li>
-				<li>[x] writeMem16()</li>
-				<li>[x] readMem32()</li>
-				<li>[x] writeMem32()</li>
-				<li>[x] readBlock()</li>
-				<li>[x] writeBlock()</li>
+				<li><input checked="" disabled="" type="checkbox"> connect()</li>
+				<li><input checked="" disabled="" type="checkbox"> disconnect()</li>
+				<li><input checked="" disabled="" type="checkbox"> reconnect()</li>
+				<li><input checked="" disabled="" type="checkbox"> reset()</li>
+				<li><input checked="" disabled="" type="checkbox"> readDP()</li>
+				<li><input checked="" disabled="" type="checkbox"> writeDP()</li>
+				<li><input checked="" disabled="" type="checkbox"> readAP()</li>
+				<li><input checked="" disabled="" type="checkbox"> writeAP()</li>
+				<li><input checked="" disabled="" type="checkbox"> readMem16()</li>
+				<li><input checked="" disabled="" type="checkbox"> writeMem16()</li>
+				<li><input checked="" disabled="" type="checkbox"> readMem32()</li>
+				<li><input checked="" disabled="" type="checkbox"> writeMem32()</li>
+				<li><input checked="" disabled="" type="checkbox"> readBlock()</li>
+				<li><input checked="" disabled="" type="checkbox"> writeBlock()</li>
 			</ul>
 			<h3 id="processor">Processor</h3>
 			<p>The <code>Processor</code> layer exposes access to the core processor registers.</p>
 			<h4 id="implementation-status">Implementation Status</h4>
 			<ul>
-				<li>[x] getState()</li>
-				<li>[x] isHalted()</li>
-				<li>[x] halt()</li>
-				<li>[x] resume()</li>
-				<li>[x] readCoreRegister()</li>
-				<li>[x] readCoreRegisters()</li>
-				<li>[x] writeCoreRegister()</li>
-				<li>[x] execute()</li>
-				<li>[ ] step()</li>
+				<li><input checked="" disabled="" type="checkbox"> getState()</li>
+				<li><input checked="" disabled="" type="checkbox"> isHalted()</li>
+				<li><input checked="" disabled="" type="checkbox"> halt()</li>
+				<li><input checked="" disabled="" type="checkbox"> resume()</li>
+				<li><input checked="" disabled="" type="checkbox"> readCoreRegister()</li>
+				<li><input checked="" disabled="" type="checkbox"> readCoreRegisters()</li>
+				<li><input checked="" disabled="" type="checkbox"> writeCoreRegister()</li>
+				<li><input checked="" disabled="" type="checkbox"> execute()</li>
+				<li><input disabled="" type="checkbox"> step()</li>
 			</ul>
 			<h2 id="development">Development</h2>
 			<p>After cloning this repository, install the development dependencies:</p>
-			<pre><code class="lang-bash">$ npm install
-</code></pre>
+			<pre><code class="language-bash">$ npm install</code></pre>
 			<h3 id="building">Building</h3>
 			<p><a href="https://gulpjs.com/">Gulp</a> is used as a task runner to build the project.
 			To build the project, simply run <code>gulp</code> or to continually build as source changes, run <code>gulp watch</code>:</p>
-			<pre><code class="lang-bash">$ gulp
-$ gulp watch
-</code></pre>
+			<pre><code class="language-bash">$ gulp
+$ gulp watch</code></pre>
 			<p>A <code>package.json script</code> exists to run gulp if you don&#39;t have it installed globally:</p>
-			<pre><code class="lang-bash">$ npm run gulp
-$ npm run gulp watch
-</code></pre>
+			<pre><code class="language-bash">$ npm run gulp
+$ npm run gulp watch</code></pre>
 			<h3 id="running">Running</h3>
 			<p>A local <a href="https://expressjs.com/">express</a> server is included to run the web example locally:</p>
-			<pre><code class="lang-bash">$ node server.js
-</code></pre>
+			<pre><code class="language-bash">$ node server.js</code></pre>
 			<p>The latest build of master is always available to be installed from the <code>gh-pages</code> branch:</p>
-			<pre><code class="lang-bash">$ npm install ARMmbed/dapjs<span class="hljs-comment">#gh-pages</span>
-</code></pre>
+			<pre><code class="language-bash">$ npm install ARMmbed/dapjs<span class="hljs-comment">#gh-pages</span></code></pre>
 		</div>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>

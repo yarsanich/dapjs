@@ -30,8 +30,8 @@ export declare class CmsisDAP extends EventEmitter implements Proxy {
      * @param clockFrequency Communication clock frequency to use (default 10000000)
      */
     constructor(transport: Transport, mode?: DAPProtocol, clockFrequency?: number);
-    private delay(timeout);
-    private bufferSourceToUint8Array(prefix, data?);
+    private delay;
+    private bufferSourceToUint8Array;
     /**
      * Switches the CMSIS-DAP unit to use SWD
      * http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0316d/Chdhfbhc.html
