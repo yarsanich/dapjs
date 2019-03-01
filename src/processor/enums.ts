@@ -166,6 +166,51 @@ export const enum DebugRegister {
 }
 
 /**
+ * NVIC Registers
+ */
+export const enum NvicRegister {
+    /**
+     * NVIC: Interrupt Controller Type Register
+     */
+    ICT = 0xE000E004,
+    /**
+     * NVIC: CPUID Base Register
+     */
+    CPUID = 0xE000ED00,
+    /**
+     * NVIC: Application Interrupt/Reset Control Register
+     */
+    AIRCR = 0xE000ED0C,
+    /**
+     * NVIC: Debug Fault Status Register
+     */
+    DFSR = 0xE000ED30
+}
+
+/**
+ * NVIC: Application Interrupt/Reset Control Register
+ * @hidden
+ */
+export const enum AircrMask {
+    /**
+     * Reset Cortex-M (except Debug)
+     */
+    VECTRESET = (1 << 0),
+    /**
+     * Clear Active Vector Bit
+     */
+    VECTCLRACTIVE = (1 << 1),
+    /**
+     * Reset System (except Debug)
+     */
+    SYSRESETREQ = (1 << 2),
+    /**
+     * Write Key
+     */
+    VECTKEY = 0x05FA0000
+}
+
+/**
  * Debug Halting Control and Status Register
  * http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0337e/CEGCJAHJ.html
  * @hidden

@@ -28,7 +28,9 @@ import {
     DhcsrMask,
     DfsrMask,
     DcrsrMask,
-    CoreState
+    CoreState,
+    NvicRegister,
+    AircrMask
 } from "./enums";
 import { Processor } from "./";
 import { DAPOperation } from "../proxy";
@@ -239,5 +241,17 @@ export class CortexM extends ADI implements Processor {
         .then(() => this.writeBlock(address, code)) // Write the code to the address
         .then(() => this.resume(false)) // Resume the target, without waiting
         .then(() => this.waitDelay(() => this.isHalted(), 100, EXECUTE_TIMEOUT)); // Wait for the target to halt on the breakpoint
+    }
+
+    /**
+     * soft reset the target
+     * @param None
+     * @returns Promise
+     */
+    public softReset(): Promise<void> {
+        return this.writeMem32(DebugRegister.DEMCR, 0)
+        .then(() => {
+            return this.writeMem32(NvicRegister.AIRCR, AircrMask.VECTKEY | AircrMask.SYSRESETREQ);
+        });
     }
 }
