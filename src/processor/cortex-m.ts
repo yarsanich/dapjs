@@ -235,6 +235,8 @@ export class CortexM extends ADI implements Processor {
         for (let i = 0; i < Math.min(registers.length, GENERAL_REGISTER_COUNT); i++) {
             sequence.push(this.writeCoreRegisterCommand(i, registers[i]));
         }
+        // Add xPSR.
+        sequence.push(this.writeCoreRegisterCommand(CoreRegister.PSR, 0x01000000));
 
         return this.halt() // Halt the target
         .then(() => this.transferSequence(sequence)) // Write the registers
