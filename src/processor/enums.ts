@@ -311,6 +311,66 @@ export const enum DcrsrMask {
 }
 
 /**
+ * Debug Exception and Monitor Control Register Mask
+ * http://infocenter.arm.com/help/topic/com.arm.doc.ddi0337e/CEGHJDCF.html
+ * @hidden
+ */
+export const enum DemcrMask {
+    /**
+     * Reset Vector Catch
+     */
+    CORERESET = (1 << 0),
+    /**
+     * Debug Trap on MMU Fault
+     */
+    MMERR = (1 << 4),
+    /**
+     * Debug Trap on No Coprocessor Fault
+     */
+    NOCPERR = (1 << 5),
+    /**
+     * Debug Trap on Checking Error Fault
+     */
+    CHKERR = (1 << 6),
+    /**
+     * Debug Trap on State Error Fault
+     */
+    STATERR = (1 << 7),
+    /**
+     * Debug Trap on Bus Error Fault
+     */
+    BUSERR = (1 << 8),
+    /**
+     * Debug Trap on Interrupt Error Fault
+     */
+    INTERR = (1 << 9),
+    /**
+     * Debug Trap on Hard Fault
+     */
+    HARDERR = (1 << 10),
+    /**
+     * Monitor Enable
+     */
+    MON_EN = (1 << 16),
+    /**
+     * Monitor Pend
+     */
+    MON_PEND = (1 << 17),
+    /**
+     * Monitor Step
+     */
+    MON_STEP = (1 << 18),
+    /**
+     * Monitor Request
+     */
+    MON_REQ = (1 << 19),
+    /**
+     * Trace Enable
+     */
+    TRCENA = (1 << 24)
+}
+
+/**
  * Flash Patch and Breakpoint Registers
  * http://infocenter.arm.com/help/topic/com.arm.doc.100165_0201_00_en/ric1417175949176.html
  * @hidden

@@ -30,7 +30,8 @@ import {
     DcrsrMask,
     CoreState,
     NvicRegister,
-    AircrMask
+    AircrMask,
+    DemcrMask
 } from "./enums";
 import { Processor } from "./";
 import { DAPOperation } from "../proxy";
@@ -254,6 +255,37 @@ export class CortexM extends ADI implements Processor {
         return this.writeMem32(DebugRegister.DEMCR, 0)
         .then(() => {
             return this.writeMem32(NvicRegister.AIRCR, AircrMask.VECTKEY | AircrMask.SYSRESETREQ);
+        });
+    }
+
+    /**
+     * set the target to reset state
+     * @param hardwareReset use hardware reset pin or software reset
+     * @returns Promise
+     */
+    public setTargetResetState(hardwareReset: boolean = true): Promise<void> {
+        return this.writeMem32(DebugRegister.DEMCR, DemcrMask.CORERESET)
+        .then(() => {
+            if (hardwareReset === true) {
+                return this.reset()
+                          .then(() => {
+                              return this.isHalted()
+                                         .then(() => {
+                                             return this.writeMem32(DebugRegister.DEMCR, 0);
+                                         });
+                          });
+            } else {
+                return this.readMem32(NvicRegister.AIRCR)
+                           .then(value => {
+                               return this.writeMem32(NvicRegister.AIRCR, AircrMask.VECTKEY | value | AircrMask.SYSRESETREQ)
+                                          .then(() => {
+                                              return this.isHalted()
+                                                         .then(() => {
+                                                             return this.writeMem32(DebugRegister.DEMCR, 0);
+                                                         });
+                                          });
+                           });
+            }
         });
     }
 }
