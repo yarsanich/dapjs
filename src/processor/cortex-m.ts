@@ -241,7 +241,7 @@ export class CortexM extends ADI implements Processor {
 
         return this.halt() // Halt the target
         .then(() => this.transferSequence(sequence)) // Write the registers
-        .then(() => this.writeBlock(address, code)) // Write the code to the address
+        .then(() => this.writeBigBlock(address, code)) // Write the code to the address
         .then(() => this.resume(false)) // Resume the target, without waiting
         .then(() => this.waitDelay(() => this.isHalted(), 100, EXECUTE_TIMEOUT)); // Wait for the target to halt on the breakpoint
     }
