@@ -29,6 +29,15 @@ import { DAPTransferMode, DAPPort, DAPProtocol } from "../proxy/enums";
 import { DEFAULT_CLOCK_FREQUENCY } from "../proxy/cmsis-dap";
 
 /**
+ * @hidden
+ */
+const MAX_BLOCK_COUNT = 1024;
+/**
+ * @hidden
+ */
+const MAX_BLOCK_ADDRESS_MASK = 0x3FF;
+
+/**
  * Arm Debug Interface class
  */
 export class ADI implements DAP {
@@ -386,6 +395,49 @@ export class ADI implements DAP {
             index += Math.floor(this.proxy.blockSize / 4);
         }
 
+        return chain;
+    }
+
+    /**
+     * read big Block(>1K Uint32Array) from target
+     * @param register ID of register to read from
+     * @param count The count of values to read
+     * @returns Promise of register data
+     */
+    public readBigBlock(register: number, count: number): Promise<Uint32Array> {
+        let chain: Promise<Uint32Array[]> = Promise.resolve([]);
+        // split big block to 1K Uint32Array chunks
+        let remainder = count;
+        let index = 0;
+        while (remainder > 0) {
+            const readRegister = register + index * 4;
+            const maxBlockCount = MAX_BLOCK_COUNT - ((readRegister >> 2) & MAX_BLOCK_ADDRESS_MASK);
+            const chunkSize = Math.min(remainder, maxBlockCount);
+            chain = chain.then(results => this.readBlock(readRegister, chunkSize).then(result => [...results, result]));
+            remainder -= chunkSize;
+            index += chunkSize;
+        }
+        return chain
+        .then(arrays => this.concatTypedArray(arrays));
+    }
+
+    /**
+     * write big Block(>1K Uint32Array) the target
+     * @param register ID of register to write to
+     * @param values The values to write
+     * @returns Promise
+     */
+    public writeBigBlock(register: number, values: Uint32Array): Promise<void> {
+        let chain: Promise<void> = Promise.resolve();
+        // split big block to 1K Uint32Array chunks
+        let index = 0;
+        while (index < values.length) {
+            const writeRegister = register + index * 4;
+            const maxBlockCount = MAX_BLOCK_COUNT - ((writeRegister >> 2) & MAX_BLOCK_ADDRESS_MASK);
+            const chunk = values.slice(index, index + maxBlockCount);
+            chain = chain.then(() => this.writeBlock(writeRegister, chunk));
+            index += maxBlockCount;
+        }
         return chain;
     }
 }
