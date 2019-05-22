@@ -60,6 +60,9 @@
 		<li class=" tsd-kind-enum">
 			<a href="../enums/debugregister.html" class="tsd-kind-icon">Debug<wbr>Register</a>
 		</li>
+		<li class=" tsd-kind-enum">
+			<a href="../enums/nvicregister.html" class="tsd-kind-icon">Nvic<wbr>Register</a>
+		</li>
 		<li class="current tsd-kind-class">
 			<a href="adi.html" class="tsd-kind-icon">ADI</a>
 			<ul>
@@ -83,6 +86,9 @@
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 					<a href="adi.html#readapcommand" class="tsd-kind-icon">readAPCommand</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="adi.html#readbigblock" class="tsd-kind-icon">read<wbr>Big<wbr>Block</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="adi.html#readblock" class="tsd-kind-icon">read<wbr>Block</a>
@@ -122,6 +128,9 @@
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 					<a href="adi.html#writeapcommand" class="tsd-kind-icon">writeAPCommand</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="adi.html#writebigblock" class="tsd-kind-icon">write<wbr>Big<wbr>Block</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="adi.html#writeblock" class="tsd-kind-icon">write<wbr>Block</a>
@@ -228,6 +237,7 @@
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="adi.html#disconnect" class="tsd-kind-icon">disconnect</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="adi.html#readap" class="tsd-kind-icon">readAP</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="adi.html#readapcommand" class="tsd-kind-icon">readAPCommand</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="adi.html#readbigblock" class="tsd-kind-icon">read<wbr>Big<wbr>Block</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="adi.html#readblock" class="tsd-kind-icon">read<wbr>Block</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="adi.html#readdp" class="tsd-kind-icon">readDP</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="adi.html#readdpcommand" class="tsd-kind-icon">readDPCommand</a></li>
@@ -241,6 +251,7 @@
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="adi.html#waitdelay" class="tsd-kind-icon">wait<wbr>Delay</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="adi.html#writeap" class="tsd-kind-icon">writeAP</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="adi.html#writeapcommand" class="tsd-kind-icon">writeAPCommand</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="adi.html#writebigblock" class="tsd-kind-icon">write<wbr>Big<wbr>Block</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="adi.html#writeblock" class="tsd-kind-icon">write<wbr>Block</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="adi.html#writedp" class="tsd-kind-icon">writeDP</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="adi.html#writedpcommand" class="tsd-kind-icon">writeDPCommand</a></li>
@@ -458,6 +469,42 @@
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DAPOperation[]</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="readbigblock" class="tsd-anchor"></a>
+				<h3>read<wbr>Big<wbr>Block</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">read<wbr>Big<wbr>Block<span class="tsd-signature-symbol">(</span>register<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, count<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Uint32Array</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Implementation of <a href="../interfaces/dap.html">DAP</a>.<a href="../interfaces/dap.html#readbigblock">readBigBlock</a></p>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>read big Block(&gt;1K Uint32Array) from target</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>register: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>ID of register to read from</p>
+								</div>
+							</li>
+							<li>
+								<h5>count: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The count of values to read</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Uint32Array</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>Promise of register data</p>
 					</li>
 				</ul>
 			</section>
@@ -816,6 +863,42 @@
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DAPOperation[]</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="writebigblock" class="tsd-anchor"></a>
+				<h3>write<wbr>Big<wbr>Block</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">write<wbr>Big<wbr>Block<span class="tsd-signature-symbol">(</span>register<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, values<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint32Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Implementation of <a href="../interfaces/dap.html">DAP</a>.<a href="../interfaces/dap.html#writebigblock">writeBigBlock</a></p>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>write big Block(&gt;1K Uint32Array) the target</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>register: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>ID of register to write to</p>
+								</div>
+							</li>
+							<li>
+								<h5>values: <span class="tsd-signature-type">Uint32Array</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The values to write</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>Promise</p>
 					</li>
 				</ul>
 			</section>

@@ -26,6 +26,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var proxy_1 = require("../proxy");
 var cmsis_dap_1 = require("../proxy/cmsis-dap");
 /**
+ * @hidden
+ */
+var MAX_BLOCK_COUNT = 1024;
+/**
+ * @hidden
+ */
+var MAX_BLOCK_ADDRESS_MASK = 0x3FF;
+/**
  * Arm Debug Interface class
  */
 var ADI = /** @class */ (function () {
@@ -311,7 +319,7 @@ var ADI = /** @class */ (function () {
         // Split into requests no longer than block size
         var remainder = count;
         var _loop_2 = function () {
-            var chunkSize = Math.min(remainder, this_2.proxy.blockSize);
+            var chunkSize = Math.min(remainder, Math.floor(this_2.proxy.blockSize / 4));
             chain = chain.then(function (results) { return _this.proxy.transferBlock(1 /* ACCESS */, 12 /* DRW */, chunkSize)
                 .then(function (result) { return results.concat([result]); }); });
             remainder -= chunkSize;
@@ -339,13 +347,62 @@ var ADI = /** @class */ (function () {
         // Split values into chunks no longer than block size
         var index = 0;
         var _loop_3 = function () {
-            var chunk = values.slice(index, index + this_3.proxy.blockSize);
+            var chunk = values.slice(index, index + Math.floor(this_3.proxy.blockSize / 4));
             chain = chain.then(function () { return _this.proxy.transferBlock(1 /* ACCESS */, 12 /* DRW */, chunk); });
-            index += this_3.proxy.blockSize;
+            index += Math.floor(this_3.proxy.blockSize / 4);
         };
         var this_3 = this;
         while (index < values.length) {
             _loop_3();
+        }
+        return chain;
+    };
+    /**
+     * read big Block(>1K Uint32Array) from target
+     * @param register ID of register to read from
+     * @param count The count of values to read
+     * @returns Promise of register data
+     */
+    ADI.prototype.readBigBlock = function (register, count) {
+        var _this = this;
+        var chain = Promise.resolve([]);
+        // split big block to 1K Uint32Array chunks
+        var remainder = count;
+        var index = 0;
+        var _loop_4 = function () {
+            var readRegister = register + index * 4;
+            var maxBlockCount = MAX_BLOCK_COUNT - ((readRegister >> 2) & MAX_BLOCK_ADDRESS_MASK);
+            var chunkSize = Math.min(remainder, maxBlockCount);
+            chain = chain.then(function (results) { return _this.readBlock(readRegister, chunkSize).then(function (result) { return results.concat([result]); }); });
+            remainder -= chunkSize;
+            index += chunkSize;
+        };
+        while (remainder > 0) {
+            _loop_4();
+        }
+        return chain
+            .then(function (arrays) { return _this.concatTypedArray(arrays); });
+    };
+    /**
+     * write big Block(>1K Uint32Array) the target
+     * @param register ID of register to write to
+     * @param values The values to write
+     * @returns Promise
+     */
+    ADI.prototype.writeBigBlock = function (register, values) {
+        var _this = this;
+        var chain = Promise.resolve();
+        // split big block to 1K Uint32Array chunks
+        var index = 0;
+        var _loop_5 = function () {
+            var writeRegister = register + index * 4;
+            var maxBlockCount = MAX_BLOCK_COUNT - ((writeRegister >> 2) & MAX_BLOCK_ADDRESS_MASK);
+            var chunk = values.slice(index, index + maxBlockCount);
+            chain = chain.then(function () { return _this.writeBlock(writeRegister, chunk); });
+            index += maxBlockCount;
+        };
+        while (index < values.length) {
+            _loop_5();
         }
         return chain;
     };
@@ -837,11 +894,58 @@ var CortexM = /** @class */ (function (_super) {
         for (var i = 0; i < Math.min(registers.length, GENERAL_REGISTER_COUNT); i++) {
             sequence.push(this.writeCoreRegisterCommand(i, registers[i]));
         }
+        // Add xPSR.
+        sequence.push(this.writeCoreRegisterCommand(16 /* PSR */, 0x01000000));
         return this.halt() // Halt the target
             .then(function () { return _this.transferSequence(sequence); }) // Write the registers
-            .then(function () { return _this.writeBlock(address, code); }) // Write the code to the address
+            .then(function () { return _this.writeBigBlock(address, code); }) // Write the code to the address
             .then(function () { return _this.resume(false); }) // Resume the target, without waiting
             .then(function () { return _this.waitDelay(function () { return _this.isHalted(); }, 100, EXECUTE_TIMEOUT); }); // Wait for the target to halt on the breakpoint
+    };
+    /**
+     * soft reset the target
+     * @param None
+     * @returns Promise
+     */
+    CortexM.prototype.softReset = function () {
+        var _this = this;
+        return this.writeMem32(3758157308 /* DEMCR */, 0)
+            .then(function () {
+            return _this.writeMem32(3758157068 /* AIRCR */, 100270080 /* VECTKEY */ | 4 /* SYSRESETREQ */);
+        });
+    };
+    /**
+     * set the target to reset state
+     * @param hardwareReset use hardware reset pin or software reset
+     * @returns Promise
+     */
+    CortexM.prototype.setTargetResetState = function (hardwareReset) {
+        var _this = this;
+        if (hardwareReset === void 0) { hardwareReset = true; }
+        return this.writeMem32(3758157308 /* DEMCR */, 1 /* CORERESET */)
+            .then(function () {
+            if (hardwareReset === true) {
+                return _this.reset()
+                    .then(function () {
+                    return _this.isHalted()
+                        .then(function () {
+                        return _this.writeMem32(3758157308 /* DEMCR */, 0);
+                    });
+                });
+            }
+            else {
+                return _this.readMem32(3758157068 /* AIRCR */)
+                    .then(function (value) {
+                    return _this.writeMem32(3758157068 /* AIRCR */, 100270080 /* VECTKEY */ | value | 4 /* SYSRESETREQ */)
+                        .then(function () {
+                        return _this.isHalted()
+                            .then(function () {
+                            return _this.writeMem32(3758157308 /* DEMCR */, 0);
+                        });
+                    });
+                });
+            }
+        });
     };
     return CortexM;
 }(dap_1.ADI));
@@ -1223,7 +1327,11 @@ var CmsisDAP = /** @class */ (function (_super) {
         view.setUint8(3, port | mode | register);
         if (typeof countOrValues !== "number") {
             // Transfer data
-            data.set(countOrValues, BLOCK_HEADER_SIZE);
+            countOrValues.forEach(function (countOrValue, index) {
+                var offset = BLOCK_HEADER_SIZE + (index * 4);
+                // Transfer data
+                view.setUint32(offset, countOrValue, true);
+            });
         }
         return this.send(6 /* DAP_TRANSFER_BLOCK */, view)
             .then(function (result) {
@@ -1233,20 +1341,20 @@ var CmsisDAP = /** @class */ (function (_super) {
             }
             // Transfer response
             var response = result.getUint8(3);
-            if (response & 2 /* WAIT */) {
+            if (response === 2 /* WAIT */) {
                 throw new Error("Transfer response WAIT");
             }
-            if (response & 4 /* FAULT */) {
+            if (response === 4 /* FAULT */) {
                 throw new Error("Transfer response FAULT");
             }
-            if (response & 8 /* PROTOCOL_ERROR */) {
+            if (response === 8 /* PROTOCOL_ERROR */) {
                 throw new Error("Transfer response PROTOCOL_ERROR");
             }
-            if (response & 7 /* NO_ACK */) {
+            if (response === 7 /* NO_ACK */) {
                 throw new Error("Transfer response NO_ACK");
             }
             if (typeof countOrValues === "number") {
-                return new Uint32Array(result.buffer.slice(4));
+                return new Uint32Array(result.buffer.slice(4, 4 + operationCount * 4));
             }
             return undefined;
         });

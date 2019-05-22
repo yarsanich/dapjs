@@ -127,4 +127,18 @@ export declare class ADI implements DAP {
      * @returns Promise
      */
     writeBlock(register: number, values: Uint32Array): Promise<void>;
+    /**
+     * read big Block(>1K Uint32Array) from target
+     * @param register ID of register to read from
+     * @param count The count of values to read
+     * @returns Promise of register data
+     */
+    readBigBlock(register: number, count: number): Promise<Uint32Array>;
+    /**
+     * write big Block(>1K Uint32Array) the target
+     * @param register ID of register to write to
+     * @param values The values to write
+     * @returns Promise
+     */
+    writeBigBlock(register: number, values: Uint32Array): Promise<void>;
 }
