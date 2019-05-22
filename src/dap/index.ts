@@ -124,6 +124,22 @@ export interface DAP {
      * @returns Promise
      */
     writeBlock(register: number, values: Uint32Array): Promise<void>;
+
+    /**
+     * Read a block of 32-bit words from a memory access port register
+     * @param register ID of register to read from
+     * @param count The count of values to read
+     * @returns Promise of register data
+     */
+    readBigBlock(register: number, count: number): Promise<Uint32Array>;
+
+    /**
+     * Write a block of 32-bit words to a memory access port register
+     * @param register ID of register to write to
+     * @param values The values to write
+     * @returns Promise
+     */
+    writeBigBlock(register: number, values: Uint32Array): Promise<void>;
 }
 
 export { ADI } from "./adi";
